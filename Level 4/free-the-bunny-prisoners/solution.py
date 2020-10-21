@@ -2,7 +2,7 @@ import functools
 import itertools
 import random
 
-CUTOFF = 100
+CUTOFF = 10000
 
 
 # def solution(num_buns, num_required):
@@ -27,7 +27,8 @@ CUTOFF = 100
 
 
 def solution(num_buns, num_required):
-    for i in xrange(11):
+
+    for i in xrange(100):
         for j in xrange(num_buns + 1):
             success = construct_incedence_matrix(num_buns, i, j, num_required)
             if success:
@@ -64,7 +65,7 @@ def construct_incedence_matrix(num_blocks, num_keys, repeats, num_required):
                 index_q.append((selected_block, min_key))
                 solution_matrix[selected_block][min_key] = 1
         if check_incidence(solution_matrix, num_required):
-            return minimize(convert_mat_to_output(solution_matrix))
+            return minimize(convert_mat_to_output(solution_matrix), num_keys)
         repeat_count = [0 for _ in xrange(num_keys)]
         kpb = (num_keys * repeats) // num_blocks
         keys_per_block = [0 for _ in xrange(num_blocks)]
@@ -73,8 +74,8 @@ def construct_incedence_matrix(num_blocks, num_keys, repeats, num_required):
     return False
 
 
-def minimize(solution_matrix):
-    subs = [set(range(_)) for _ in xrange(10)]
+def minimize(solution_matrix, num_keys):
+    subs = [set(range(_)) for _ in xrange(max(num_keys, 10))]
     row_length = len(solution_matrix[0])
     for i in xrange(len(solution_matrix)):
         solution_matrix[i] = list(reversed(sorted(solution_matrix[i])))
@@ -93,7 +94,7 @@ def minimize(solution_matrix):
                                 solution_matrix[k][l] = sub
                             elif solution_matrix[k][l] == sub:
                                 solution_matrix[k][l] = candidate
-        all, row = set(range(1,10)), set(solution_matrix[i])
+        all, row = set(range(1,num_keys)), set(solution_matrix[i])
         rem = all - row
         for elem in rem:
             subs[elem] = subs[elem] - row
@@ -149,5 +150,17 @@ output_1 = [[0], [0]]
 
 # print(solution(num_buns_1, num_required_1))
 # print(solution(num_buns_2, num_required_2))
-print(solution(num_buns_3, num_required_3))
+# print(solution(num_buns_3, num_required_3))
 
+# print(check_incidence([[0, 1, 2, 3, 4],
+#  [0, 1, 2, 3, 5],
+#  [0, 1, 2, 5, 6],
+#  [0, 1, 2, 7, 9],
+#  [0, 1, 4, 8, 9],
+#  [0, 3, 6, 7, 8]], 5))
+
+
+for i in xrange(1,10):
+    for j in xrange(0,i+1):
+        print "Params", i, j
+        print(solution(i, j))
