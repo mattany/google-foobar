@@ -2,7 +2,7 @@ import functools
 import itertools
 import random
 
-CUTOFF = 10000
+CUTOFF = 100
 
 
 # def solution(num_buns, num_required):
@@ -27,29 +27,20 @@ CUTOFF = 10000
 
 
 def solution(num_buns, num_required):
-    # solution_matrix = [[0 for i in xrange(10)] for i in xrange(num_buns)]
     for i in xrange(11):
-        # print(i, "elements")
-        possible_blocks = list(itertools.product((0, 1), repeat=i))
-        buckets = {k: [] for k in xrange(i + 1)}
-        for block in possible_blocks:
-            buckets[sum(block)].append(block)
-        for j in xrange(i + 1):
-            all_perms = ((tuple(1 if _ < j else 0 for _ in xrange(i)),) + _ for _ in
-                         itertools.combinations_with_replacement(buckets[j], num_buns - 1))
-            for perm in all_perms:
-                if symmetric_permutation(perm):
-                    if check_incidence(perm, num_required):
-                        return convert_mat_to_output(perm)
-                    break
-                    # print(perm)
-                    # print(',')
-            # print(len(buckets[j]), len(all_perms))
+        for j in xrange(num_buns + 1):
+            success = construct_incedence_matrix(num_buns, i, j, num_required)
+            if success:
+                return success
+
+
+
+
 
 
 def construct_incedence_matrix(num_blocks, num_keys, repeats, num_required):
     if (num_keys * repeats) % num_blocks:
-        return -1
+        return False
     repeat_count = [0 for _ in xrange(num_keys)]
     kpb = (num_keys * repeats) // num_blocks
     keys_per_block = [0 for _ in xrange(num_blocks)]
@@ -73,44 +64,40 @@ def construct_incedence_matrix(num_blocks, num_keys, repeats, num_required):
                 index_q.append((selected_block, min_key))
                 solution_matrix[selected_block][min_key] = 1
         if check_incidence(solution_matrix, num_required):
-            minimize(convert_mat_to_output(solution_matrix))
+            return minimize(convert_mat_to_output(solution_matrix))
         repeat_count = [0 for _ in xrange(num_keys)]
         kpb = (num_keys * repeats) // num_blocks
         keys_per_block = [0 for _ in xrange(num_blocks)]
         solution_matrix = [[0 for _ in xrange(num_keys)] for i in xrange(num_blocks)]
         index_q = []
-    return -1
+    return False
 
 
 def minimize(solution_matrix):
-    flipped = [list(reversed(row)) for row in solution_matrix]
-    subs = [range(_) for _ in xrange(10)]
-    row_length = len(flipped[0])
-    for i in xrange(len(flipped)):
+    subs = [set(range(_)) for _ in xrange(10)]
+    row_length = len(solution_matrix[0])
+    for i in xrange(len(solution_matrix)):
+        solution_matrix[i] = list(reversed(sorted(solution_matrix[i])))
+        not_relevant = set()
         for j in xrange(row_length):
-            candidate = flipped[i][j]
+            not_relevant |= set(solution_matrix[i])
+            candidate = solution_matrix[i][j]
             if subs[candidate]:
-                cur = 0
-                sub = subs[candidate][cur]
-                while sub in flipped[i]:
-                    sub
-                flipped[]
-                for k in
-                replacements = [_ for _ in xrange(len(solution_matrix[i])) if
-                                _ not in solution_matrix[i] + added + checked]
-                if replacements:
-                    min_ind = min(replacements)
-
-                    switch[candidate] = min_ind
-                    switch[min_ind] = candidate
-                    added.append(min_ind)
-                    candidate = solution_matrix[i][j]
-
-    output = sorted([sorted([_ if _ not in switch else switch[_] for _ in row]) for row in solution_matrix])
-    for row in solution_matrix:
-        print row
-    print("")
-    return output
+                sub_options = subs[candidate] - not_relevant
+                if sub_options:
+                    sub = min(sub_options)
+                    solution_matrix[i][j] = sub
+                    for k in xrange(i + 1, len(solution_matrix)):
+                        for l in xrange(row_length):
+                            if solution_matrix[k][l] == candidate:
+                                solution_matrix[k][l] = sub
+                            elif solution_matrix[k][l] == sub:
+                                solution_matrix[k][l] = candidate
+        all, row = set(range(1,10)), set(solution_matrix[i])
+        rem = all - row
+        for elem in rem:
+            subs[elem] = subs[elem] - row
+    return sorted([sorted(row) for row in solution_matrix])
 
 
 def symmetric_permutation(perm):
@@ -162,20 +149,5 @@ output_1 = [[0], [0]]
 
 # print(solution(num_buns_1, num_required_1))
 # print(solution(num_buns_2, num_required_2))
-# print(solution(num_buns_3, num_required_3))
+print(solution(num_buns_3, num_required_3))
 
-mat = construct_incedence_matrix(5, 10, 3, 3)
-
-# for i in range(5):
-#     print "iteration " + str(i) + ":"
-#     for t in twos:
-#         if check_incidence(t, i):
-#             print(convert_mat_to_output(t))
-
-a = [
-    [0, 1, 5, 4, 3, 2],
-    [0, 8, 7, 6, 1, 2],
-    [0, 9, 7, 3, 6, 4],
-    [5, 8, 9, 6, 3, 1],
-    [5, 8, 9, 4, 7, 2]
-]
