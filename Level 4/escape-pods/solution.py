@@ -62,7 +62,3 @@ def get_flow_network(entrances, exits, path):
         max_flow = sum(network[j][i][CAPACITY] for j in network_size)
         network[i][SINK] = (0, max_flow)
     return network
-
-
-print(solution([0], [3], [[0, 7, 0, 0], [0, 0, 6, 0], [0, 0, 0, 8], [9, 0, 0, 0]]))
-print(solution([0, 1], [4, 5], [[0, 0, 4, 6, 0, 0], [0, 0, 5, 2, 0, 0], [0, 0, 0, 0, 4, 4], [0, 0, 0, 0, 6, 6], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]))
