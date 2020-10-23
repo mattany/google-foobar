@@ -15,87 +15,25 @@ up_options = [{0, 4, 8, 12}, {0, 4, 8, 12}, {0, 4, 8, 12}, {0, 4, 8, 12},
 
 left_options = [{0, 2, 8, 10}, {0, 2, 8, 10}, {1, 3, 9, 11}, {1, 3, 9, 11},
                 {0, 2, 8, 10}, {0, 2, 8, 10}, {1, 3, 9, 11}, {1, 3, 9, 11},
-                {4, 7, 12, 14}, {4, 7, 12, 14}, {5, 7, 13, 15}, {5, 7, 13, 15},
-                {4, 7, 12, 14}, {4, 7, 12, 14}, {5, 7, 13, 15}, {5, 7, 13, 15}]
+                {4, 6, 12, 14}, {4, 7, 12, 14}, {5, 7, 13, 15}, {5, 7, 13, 15},
+                {4, 6, 12, 14}, {4, 7, 12, 14}, {5, 7, 13, 15}, {5, 7, 13, 15}]
 
-udlr = {(1, 0, 1, 1): {0, 9, 12},
-        (1, 1, 0, 1): {0, 9, 5},
-        (1, 0, 0, 0): {0, 5, 9, 10, 12, 13, 14},
-        (0, 1, 1, 0): {0, 3, 7, 9, 10, 11},
-        (1, 0, 1, 0): {0, 9, 10, 12, 14},
-        (0, 0, 0, 1): {0, 3, 5, 7, 9, 12, 13},
-        (0, 0, 1, 1): {0, 9, 3, 12, 7},
-        (1, 0, 0, 1): {0, 9, 12, 5, 13}, (0, 1, 0, 0): {0, 3, 5, 7, 9, 10, 11},
-        (1, 1, 1, 1): {0, 9},
-        (0, 0, 0, 0): {0, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15},
-        (0, 0, 1, 0): {0, 3, 7, 9, 10, 11, 12, 14},
-        (0, 1, 0, 1): {0, 9, 3, 5, 7},
-        (1, 1, 1, 0): {0, 9, 10},
-        (0, 1, 1, 1): {0, 9, 3, 7},
-        (1, 1, 0, 0): {0, 9, 10, 5},
-        (None, 0, None, 1): {0, 3, 5, 6, 7, 9, 12, 13},
-        (None, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
-        (None, 1, None, 0): {0, 3, 5, 6, 7, 9, 10, 11},
-        (None, 1, None, 1): {0, 3, 5, 6, 7, 9},
-        (1, 0, None, 1): {0, 5, 6, 9, 12, 13},
-        (1, 1, None, 0): {0, 9, 10, 5, 6},
-        (1, 0, None, 0): {0, 5, 6, 9, 10, 12, 13, 14},
-        (0, 1, None, 1): {0, 3, 5, 6, 7, 9},
-        (1, 1, None, 1): {0, 9, 5, 6},
-        (0, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
-        (0, 1, None, 0): {0, 3, 5, 6, 7, 9, 10, 11},
-        (0, 0, None, 1): {0, 3, 5, 6, 7, 9, 12, 13},
-        (0, None, None, 1): {0, 3, 5, 6, 7, 9, 12, 13},
-        (0, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
-        (1, None, None, 0): {0, 5, 6, 9, 10, 12, 13, 14},
-        (1, None, None, 1): {0, 5, 6, 9, 12, 13},
-        (1, None, 0, 1): {0, 9, 12, 5, 13},
-        (1, None, 1, 0): {0, 9, 10, 12, 14},
-        (1, None, 0, 0): {0, 5, 9, 10, 12, 13, 14},
-        (0, None, 1, 1): {0, 9, 3, 12, 7},
-        (1, None, 1, 1): {0, 9, 12},
-        (0, None, 0, 0): {0, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15},
-        (0, None, 1, 0): {0, 3, 7, 9, 10, 11, 12, 14},
-        (0, None, 0, 1): {0, 3, 5, 7, 9, 12, 13},
-        (1, None, 0, None): {0, 5, 9, 10, 12, 13, 14},
-        (0, None, 1, None): {0, 3, 7, 9, 10, 11, 12, 14},
-        (1, None, 1, None): {0, 9, 10, 12, 14},
-        (0, None, 0, None): {0, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15},
-        (0, 1, 1, None): {0, 3, 7, 9, 10, 11},
-        (0, 1, 0, None): {0, 3, 5, 7, 9, 10, 11},
-        (1, 1, 0, None): {0, 9, 10, 5},
-        (0, 0, 0, None): {0, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15},
-        (1, 0, 0, None): {0, 5, 9, 10, 12, 13, 14},
-        (1, 0, 1, None): {0, 9, 10, 12, 14},
-        (0, 0, 1, None): {0, 3, 7, 9, 10, 11, 12, 14},
-        (1, 1, 1, None): {0, 9, 10},
-        (None, 0, 1, None): {0, 3, 7, 9, 10, 11, 12, 14},
-        (None, 1, 0, None): {0, 3, 5, 7, 9, 10, 11},
-        (None, 0, 0, None): {0, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15},
-        (None, 1, 1, None): {0, 3, 7, 9, 10, 11},
-        (None, 0, 1, 0): {0, 3, 7, 9, 10, 11, 12, 14},
-        (None, 0, 0, 1): {0, 3, 5, 7, 9, 12, 13},
-        (None, 1, 0, 0): {0, 3, 5, 7, 9, 10, 11},
-        (None, 1, 1, 0): {0, 3, 7, 9, 10, 11},
-        (None, 1, 0, 1): {0, 9, 3, 5, 7},
-        (None, 0, 1, 1): {0, 9, 3, 12, 7},
-        (None, 0, 0, 0): {0, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15},
-        (None, 1, 1, 1): {0, 9, 3, 7},
-        }
+udlr = {(None, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 1, None): {0, 3, 5, 6, 7, 9}, (None, 1, 0, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 0, 1): {0, 3, 6, 9, 10, 11}, (1, None, 1, 0): {0, 3, 5, 6, 7, 9}, (0, 1, None, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 1, 1, 1): {0, 9, 6}, (None, None, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 1, None, None): {0, 9, 10, 5, 6}, (None, None, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (0, 1, 1, None): {0, 5, 6, 9, 12, 13}, (0, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11}, (0, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 1, 1): {0, 9, 3, 12, 6}, (None, 1, 0, 1): {0, 6, 9, 10, 12, 14}, (0, None, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 1, None, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 0, 1, 1): {0, 9, 3, 6}, (None, 0, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 0, None, 1): {0, 3, 6, 9, 10, 11}, (None, 0, 1, 1): {0, 9, 3, 12, 6}, (0, 1, 1, 1): {0, 9, 12, 6}, (1, 1, None, 0): {0, 9, 10, 5, 6}, (0, None, 1, 1): {0, 9, 3, 12, 6}, (0, 0, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 0, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, 1, None, 1): {0, 6, 9, 10, 12, 14}, (None, 1, None, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (0, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 1, 1, 0): {0, 5, 6, 9, 12, 13}, (0, None, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (0, None, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 1, 0, 1): {0, 9, 10, 6}, (None, 0, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (None, 0, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (0, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 0, 1, 0): {0, 3, 5, 6, 7, 9}, (0, 0, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (None, None, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, None, 1, 1): {0, 9, 3, 12, 6}, (0, 1, 0, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (0, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11}, (1, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 1, 1, 0): {0, 5, 6, 9, 12, 13}, (1, 1, None, 1): {0, 9, 10, 6}, (1, 1, 0, None): {0, 9, 10, 5, 6}, (1, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, 1, None, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (None, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (None, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 1, 1, 0): {0, 9, 5, 6}, (None, 1, 1, 1): {0, 9, 12, 6}, (1, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11}, (0, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 1, 0, 0): {0, 9, 10, 5, 6}, (0, None, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 0, 0, 1): {0, 3, 6, 9, 10, 11}, (0, 0, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 1, 1, None): {0, 5, 6, 9, 12, 13}, (1, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11}, (None, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 1, 1, None): {0, 9, 5, 6}, (0, 1, 0, 1): {0, 6, 9, 10, 12, 14}, (1, 0, 1, None): {0, 3, 5, 6, 7, 9}, (1, None, None, 1): {0, 3, 6, 9, 10, 11}, (None, 1, None, 1): {0, 6, 9, 10, 12, 14}, (1, None, 1, 1): {0, 9, 3, 6}}
+
 
 gas_options = {1, 2, 4, 8}
 
 
 def get_possibilities_by_neighbors():
     possibilities = dict()
-    # for u in range(2):
-    for d in range(2):
-            for l in range(2):
-                for r in range(2):
-                    # if u:
-                    #     u_options = gas_options
-                    # else:
-                    #     u_options = {_ for _ in xrange(16)} - gas_options
+    for u in range(3):
+        for d in range(3):
+            for l in range(3):
+                for r in range(3):
+                    if u:
+                        u_options = gas_options
+                    else:
+                        u_options = {_ for _ in xrange(16)} - gas_options
                     if d:
                         d_options = gas_options
                     else:
@@ -109,15 +47,20 @@ def get_possibilities_by_neighbors():
                     else:
                         r_options = {_ for _ in xrange(16)} - gas_options
                     u_possibilities, d_possibilities, l_possibilities, r_possibilities = set(), set(), set(), set()
-                    # for u_opt in u_options:
-                    #     u_possibilities |= up_options[u_opt]
+                    for u_opt in u_options:
+                        u_possibilities |= down_options[u_opt]
                     for d_opt in d_options:
-                        d_possibilities |= down_options[d_opt]
+                        d_possibilities |= up_options[d_opt]
                     for l_opt in l_options:
-                        l_possibilities |= left_options[l_opt]
+                        l_possibilities |= right_options[l_opt]
                     for r_opt in r_options:
-                        r_possibilities |= right_options[r_opt]
-                    possibilities[(None, d, l, r)] =r_possibilities& d_possibilities &l_possibilities  - {1,2,4,8}
+                        r_possibilities |= left_options[r_opt]
+                    if u == 2: u, u_possibilities = None, {_ for _ in xrange(16)}
+                    if d == 2: d, d_possibilities = None, {_ for _ in xrange(16)}
+                    if l == 2: l, l_possibilities = None, {_ for _ in xrange(16)}
+                    if r == 2: r, r_possibilities = None, {_ for _ in xrange(16)}
+                    possibilities[(u, d, l, r)] = u_possibilities & r_possibilities & d_possibilities & l_possibilities \
+                                                  - {1, 2, 4, 8}
     print possibilities
 
 
@@ -164,6 +107,7 @@ def construct_solution(input_matrix, i, j, output_matrix):
         if not j_done:
             r = input_matrix[i][j + 1]
         options = udlr[(u, d, l, r)] & up & left
+        # options = up & left - gas_options
     if not options:
         return 0
 
@@ -205,12 +149,12 @@ input_2 = [[True, False, True, False, False, True, True, True],
            [True, False, True, False, False, True, True, True]]
 
 inputs = [input_0, input_1, input_2]
-# for g in inputs:
-#     for r in g:
-#         print [int(i) for i in r]
-#     print
-# print solution(g)
-# print solution(inputs[1])
+for g in inputs:
+    # for r in g:
+    #         print [int(i) for i in r]
+    #     print
+    print solution(g)
 
-for k, v in get_possibilities_by_neighbors().items():
-    print k, v
+# get_possibilities_by_neighbors()
+# for k, v in get_possibilities_by_neighbors().items():
+#     print k, v
