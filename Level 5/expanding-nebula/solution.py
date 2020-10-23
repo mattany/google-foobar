@@ -1,3 +1,5 @@
+import copy
+
 right_options = [{0, 1, 4, 5}, {2, 3, 6, 7}, {0, 1, 4, 5}, {2, 3, 6, 7},
                  {8, 9, 12, 13}, {10, 11, 14, 15}, {8, 9, 12, 13}, {10, 11, 14, 15},
                  {0, 1, 4, 5}, {2, 3, 6, 7}, {0, 1, 4, 5}, {2, 3, 6, 7},
@@ -18,8 +20,48 @@ left_options = [{0, 2, 8, 10}, {0, 2, 8, 10}, {1, 3, 9, 11}, {1, 3, 9, 11},
                 {4, 6, 12, 14}, {4, 7, 12, 14}, {5, 7, 13, 15}, {5, 7, 13, 15},
                 {4, 6, 12, 14}, {4, 7, 12, 14}, {5, 7, 13, 15}, {5, 7, 13, 15}]
 
-udlr = {(None, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 1, None): {0, 3, 5, 6, 7, 9}, (None, 1, 0, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 0, 1): {0, 3, 6, 9, 10, 11}, (1, None, 1, 0): {0, 3, 5, 6, 7, 9}, (0, 1, None, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 1, 1, 1): {0, 9, 6}, (None, None, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 1, None, None): {0, 9, 10, 5, 6}, (None, None, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (0, 1, 1, None): {0, 5, 6, 9, 12, 13}, (0, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11}, (0, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 1, 1): {0, 9, 3, 12, 6}, (None, 1, 0, 1): {0, 6, 9, 10, 12, 14}, (0, None, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 1, None, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 0, 1, 1): {0, 9, 3, 6}, (None, 0, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 0, None, 1): {0, 3, 6, 9, 10, 11}, (None, 0, 1, 1): {0, 9, 3, 12, 6}, (0, 1, 1, 1): {0, 9, 12, 6}, (1, 1, None, 0): {0, 9, 10, 5, 6}, (0, None, 1, 1): {0, 9, 3, 12, 6}, (0, 0, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 0, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, 1, None, 1): {0, 6, 9, 10, 12, 14}, (None, 1, None, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (0, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 1, 1, 0): {0, 5, 6, 9, 12, 13}, (0, None, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (0, None, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 1, 0, 1): {0, 9, 10, 6}, (None, 0, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (None, 0, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (0, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 0, 1, 0): {0, 3, 5, 6, 7, 9}, (0, 0, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (None, None, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, None, 1, 1): {0, 9, 3, 12, 6}, (0, 1, 0, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (0, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11}, (1, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 1, 1, 0): {0, 5, 6, 9, 12, 13}, (1, 1, None, 1): {0, 9, 10, 6}, (1, 1, 0, None): {0, 9, 10, 5, 6}, (1, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, 1, None, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (None, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (None, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 1, 1, 0): {0, 9, 5, 6}, (None, 1, 1, 1): {0, 9, 12, 6}, (1, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11}, (0, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 1, 0, 0): {0, 9, 10, 5, 6}, (0, None, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 0, 0, 1): {0, 3, 6, 9, 10, 11}, (0, 0, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 1, 1, None): {0, 5, 6, 9, 12, 13}, (1, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11}, (None, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 1, 1, None): {0, 9, 5, 6}, (0, 1, 0, 1): {0, 6, 9, 10, 12, 14}, (1, 0, 1, None): {0, 3, 5, 6, 7, 9}, (1, None, None, 1): {0, 3, 6, 9, 10, 11}, (None, 1, None, 1): {0, 6, 9, 10, 12, 14}, (1, None, 1, 1): {0, 9, 3, 6}}
-
+udlr = {(None, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 1, None): {0, 3, 5, 6, 7, 9},
+        (None, 1, 0, 0): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 0, 1): {0, 3, 6, 9, 10, 11},
+        (1, None, 1, 0): {0, 3, 5, 6, 7, 9}, (0, 1, None, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 1, 1, 1): {0, 9, 6},
+        (1, 1, None, None): {0, 9, 10, 5, 6},
+        (None, None, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (0, 1, 1, None): {0, 5, 6, 9, 12, 13},
+        (0, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
+        (1, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11},
+        (0, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, 1, 1): {0, 9, 3, 12, 6},
+        (None, 1, 0, 1): {0, 6, 9, 10, 12, 14}, (0, None, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13},
+        (None, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
+        (1, 0, 1, 1): {0, 9, 3, 6},
+        (None, 0, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (1, 0, None, 1): {0, 3, 6, 9, 10, 11},
+        (None, 0, 1, 1): {0, 9, 3, 12, 6}, (0, 1, 1, 1): {0, 9, 12, 6}, (1, 1, None, 0): {0, 9, 10, 5, 6},
+        (0, None, 1, 1): {0, 9, 3, 12, 6}, (0, 0, 1, None): {0, 3, 5, 6, 7, 9, 12, 13},
+        (None, 0, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11},
+        (0, 1, None, 1): {0, 6, 9, 10, 12, 14}, (None, 1, None, 0): {0, 5, 6, 9, 10, 12, 13, 14},
+        (0, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
+        (None, None, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, 1, 1, 0): {0, 5, 6, 9, 12, 13},
+        (0, None, 1, None): {0, 3, 5, 6, 7, 9, 12, 13}, (0, None, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14},
+        (1, 1, 0, 1): {0, 9, 10, 6}, (None, 0, 1, None): {0, 3, 5, 6, 7, 9, 12, 13},
+        (1, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (None, 0, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14},
+        (0, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
+        (1, 0, 1, 0): {0, 3, 5, 6, 7, 9},
+        (0, 0, 0, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (None, None, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13},
+        (None, None, 1, 1): {0, 9, 3, 12, 6}, (0, 1, 0, 0): {0, 5, 6, 9, 10, 12, 13, 14},
+        (0, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, 0, None, None): {0, 3, 5, 6, 7, 9, 10, 11},
+        (1, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11},
+        (0, 1, 1, 0): {0, 5, 6, 9, 12, 13}, (1, 1, None, 1): {0, 9, 10, 6}, (1, 1, 0, None): {0, 9, 10, 5, 6},
+        (1, None, None, 0): {0, 3, 5, 6, 7, 9, 10, 11}, (0, 1, None, 0): {0, 5, 6, 9, 10, 12, 13, 14},
+        (None, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (0, 0, None, 1): {0, 3, 6, 9, 10, 11, 12, 14},
+        (None, 0, None, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (1, 1, 1, 0): {0, 9, 5, 6},
+        (None, 1, 1, 1): {0, 9, 12, 6}, (1, None, None, None): {0, 3, 5, 6, 7, 9, 10, 11},
+        (0, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
+        (1, 1, 0, 0): {0, 9, 10, 5, 6},
+        (0, None, None, 1): {0, 3, 6, 9, 10, 11, 12, 14}, (1, 0, 0, 1): {0, 3, 6, 9, 10, 11},
+        (0, 0, 1, 0): {0, 3, 5, 6, 7, 9, 12, 13}, (None, 1, 1, None): {0, 5, 6, 9, 12, 13},
+        (1, None, 0, None): {0, 3, 5, 6, 7, 9, 10, 11},
+        (0, 0, 0, None): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15},
+        (0, 0, 0, 0): {0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15}, (None, None, 1, None): {0, 3, 5, 6, 7, 9, 12, 13},
+        (1, 1, 1, None): {0, 9, 5, 6}, (0, 1, 0, 1): {0, 6, 9, 10, 12, 14}, (1, 0, 1, None): {0, 3, 5, 6, 7, 9},
+        (1, None, None, 1): {0, 3, 6, 9, 10, 11}, (None, 1, None, 1): {0, 6, 9, 10, 12, 14},
+        (1, None, 1, 1): {0, 9, 3, 6}}
 
 gas_options = {1, 2, 4, 8}
 
@@ -65,7 +107,9 @@ def get_possibilities_by_neighbors():
 
 
 def solution(g):
-    return construct_solution(g, 0, 0, [[None for _ in xrange(len(g[0]))] for _ in xrange(len(g))])
+    # return construct_solution(g, 0, 0, [[None for _ in xrange(len(g[0]))] for _ in xrange(len(g))])
+    mat = get_starting_matrix(g)
+    return construct_solution([(mat, 0, 0)], 0)
 
 
 def insert(m, v, i, j):
@@ -88,51 +132,108 @@ def convert_matrix(input_matrix):
     return output
 
 
-def construct_solution(input_matrix, i, j, output_matrix):
-    up, left = {_ for _ in xrange(16)}, {_ for _ in xrange(16)}
-    i_done = i == len(input_matrix) - 1
-    j_done = j == len(input_matrix[0]) - 1
-    u, d, l, r = None, None, None, None
-    if i > 0:
-        u = input_matrix[i - 1][j]
-        up = down_options[output_matrix[i - 1][j]]
-    if j > 0:
-        l = input_matrix[i][j - 1]
-        left = right_options[output_matrix[i][j - 1]]
-    if input_matrix[i][j]:
-        options = up & left & gas_options
-    else:
-        if not i_done:
-            d = input_matrix[i + 1][j]
-        if not j_done:
-            r = input_matrix[i][j + 1]
-        options = udlr[(u, d, l, r)] & up & left
-        # options = up & left - gas_options
-    if not options:
-        return 0
+def get_starting_matrix(input_matrix):
+    min_length = 16
+    starting_row, starting_col = 0, 0
+    output_matrix = [[{_ for _ in xrange(16)} for _ in xrange(len(g[0]))] for _ in xrange(len(g))]
+    for i in xrange(len(input_matrix)):
+        for j in xrange(len(input_matrix[0])):
+            u, d, l, r = None, None, None, None
+            if i > 0:
+                u = input_matrix[i - 1][j]
+            if j > 0:
+                l = input_matrix[i][j - 1]
+            if not input_matrix[i][j]:
+                if i < len(input_matrix) - 1:
+                    d = input_matrix[i + 1][j]
+                if j < len(input_matrix[0]) - 1:
+                    r = input_matrix[i][j + 1]
+                options = udlr[(u, d, l, r)]
+                output_matrix[i][j] = options
+            else:
+                output_matrix[i][j] = gas_options
+    return output_matrix
 
-    if i_done and j_done:
-        # todo delete
-        # for opt in options:
-        #     for row in convert_matrix(insert(output_matrix, opt, i, j)):
-        #         print row
-        #     print
-        #     for row in insert(output_matrix, opt, i, j):
-        #         print row
-        #     print
 
-        return len(options)
-    if not i % 2:
-        if i != len(input_matrix) - 1:
-            ni, nj = i + 1, j
+def construct_solution(stack, sum):
+    while stack:
+        output_matrix, i, j = stack.pop()
+        if i == len(output_matrix) - 1 and j == len(output_matrix[0]) - 1:
+            # todo delete
+            # for opt in options:
+            #     for row in convert_matrix(insert(output_matrix, opt, i, j)):
+            #         print row
+            #     print
+            #     for row in insert(output_matrix, opt, i, j):
+            #         print row
+            #     print
+            sum += len(output_matrix[i][j])
         else:
-            ni, nj = i, j + 1
+            if len(output_matrix[i][j]) == 1:
+                (j, i) = (j + 1, i) if j + 1 < len(output_matrix) else (0, i + 1)
+                stack.append(output_matrix, i, j)
+            else:
+                for opt in output_matrix[i][j]:
+                    output_matrix[i][j] = {opt}
+                    temp = copy.deepcopy(output_matrix)
+                    if update_matrix(i, j, temp):
+                        (j, i) = (j + 1, i) if j + 1 < len(output_matrix) else (0, i + 1)
+                        stack.append(temp, i, j)
+    return sum
+
+
+def update_matrix(i, j, matrix, dirs):
+    if i > 0 and dirs[0]:
+        if not update(i, j, up_options, matrix, 0):
+            return False
+    if i < len(matrix) - 1 and dirs[1]:
+        if not update(i, j, down_options, matrix, 1):
+            return False
+    if j > 0 and dirs[2]:
+        if not update(i, j, i, j - 1, left_options, matrix):
+            return False
+    if j < len(matrix) - 1 and dirs[3]:
+        if not update(i, j, i, j + 1, right_options, matrix):
+            return False
+    return True
+
+
+def update(i, j, options, matrix, dir):
+    if dir == 0:
+        dirs = (1, 0, 1, 1)
+        ni, nj = i - 1, j
+    elif dir == 1:
+        dirs = (0, 1, 1, 1)
+        ni, nj = i + 1, j
+    elif dir == 2:
+        dirs = (1, 1, 1, 0)
+        ni, nj = i, j - 1
+    elif dir == 3:
+        dirs = (1, 1, 0, 1)
+        ni, nj = i, j + 1
     else:
-        if j != len(input_matrix[0]) - 1:
-            ni, nj = i - 1, j + 1
-        else:
-            ni, nj = i + 1, 0
-    return sum(construct_solution(input_matrix, ni, nj, insert(output_matrix, o, i, j)) for o in options)
+        assert False
+
+    directional_options = set()
+    for opt in matrix[i][j]:
+        directional_options |= options[opt]
+    # if change happened
+    temp = matrix[ni][nj]
+    matrix[ni][nj] = matrix[ni][nj] & directional_options
+    if not matrix[ni][nj]:
+        return False
+    if temp != matrix[ni][nj]:
+        return update_matrix(ni, nj, matrix, dirs)
+    return True
+
+
+# def construct_solution(all_options):
+#     output_matrix = [[None for _ in xrange(len(g[0]))] for _ in xrange(len(g))]
+#     for i in xrange(len(all_options)):
+#         for j in xrange(len(all_options[0])):
+#             for k in all_options[i][j]:
+#                 output_matrix[i][j] = k
+#
 
 
 input_0 = [[True, True, False, True, False, True, False, True, True, False],
@@ -150,11 +251,9 @@ input_2 = [[True, False, True, False, False, True, True, True],
 
 inputs = [input_0, input_1, input_2]
 for g in inputs:
-    # for r in g:
-    #         print [int(i) for i in r]
-    #     print
+    # for r in solution(g):
+    #     print r
     print solution(g)
-
 # get_possibilities_by_neighbors()
 # for k, v in get_possibilities_by_neighbors().items():
 #     print k, v
