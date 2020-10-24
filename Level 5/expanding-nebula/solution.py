@@ -66,13 +66,31 @@ udlr = {(None, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 1, None): {0
 gas_options = {1, 2, 4, 8}
 
 
-
 def solution(g):
     global row_length, mat_length
+    row_length, mat_length = len(g[0]), len(g)
     mat = get_starting_matrix(g)
-    row_length, mat_length = len(g[0]), len( g)
     return construct_solution([(mat, 0, 0)], 0)
 
+def get_starting_matrix(input_matrix):
+    output_matrix = [[{_ for _ in xrange(16)} for _ in xrange(row_length)] for _ in xrange(mat_length)]
+    for i in xrange(mat_length):
+        for j in xrange(row_length):
+            u, d, l, r = None, None, None, None
+            if i > 0:
+                u = input_matrix[i - 1][j]
+            if j > 0:
+                l = input_matrix[i][j - 1]
+            if not input_matrix[i][j]:
+                if i < mat_length - 1:
+                    d = input_matrix[i + 1][j]
+                if j < row_length - 1:
+                    r = input_matrix[i][j + 1]
+                options = udlr[(u, d, l, r)]
+                output_matrix[i][j] = options
+            else:
+                output_matrix[i][j] = gas_options
+    return output_matrix
 
 def insert(m, v, i, j):
     m[i][j] = {v}
@@ -94,35 +112,12 @@ def convert_matrix(input_matrix):
     return output
 
 
-def get_starting_matrix(input_matrix):
-    min_length = 16
-    starting_row, starting_col = 0, 0
-    output_matrix = [[{_ for _ in xrange(16)} for _ in xrange(len(input_matrix[0]))] for _ in xrange(len(input_matrix))]
-    for i in xrange(len(input_matrix)):
-        for j in xrange(len(input_matrix[0])):
-            u, d, l, r = None, None, None, None
-            if i > 0:
-                u = input_matrix[i - 1][j]
-            if j > 0:
-                l = input_matrix[i][j - 1]
-            if not input_matrix[i][j]:
-                if i < len(input_matrix) - 1:
-                    d = input_matrix[i + 1][j]
-                if j < len(input_matrix[0]) - 1:
-                    r = input_matrix[i][j + 1]
-                options = udlr[(u, d, l, r)]
-                output_matrix[i][j] = options
-            else:
-                output_matrix[i][j] = gas_options
-    return output_matrix
-
-
 def construct_solution(stack, sum):
     while stack:
         output_matrix, i, j = stack.pop()
-        while i < len(output_matrix) and len(output_matrix[i][j]) == 1:
-            (j, i) = (j + 1, i) if j < len(output_matrix[0]) - 1 else (0, i + 1)
-        if i == len(output_matrix):
+        while i < mat_length and len(output_matrix[i][j]) == 1:
+            (j, i) = (j + 1, i) if j < row_length - 1 else (0, i + 1)
+        if i == mat_length:
             sum += 1
         else:
             for opt in output_matrix[i][j]:
@@ -135,12 +130,12 @@ def construct_solution(stack, sum):
 
 
 def update_matrix(i, j, matrix, dirs):
-    if i > 0 and dirs[0] and not update(i, j, matrix, 0):
-        return False
+    # if i > 0 and dirs[0] and not update(i, j, matrix, 0):
+    #     return False
     if i < len(matrix) - 1 and dirs[1] and not update(i, j, matrix, 1):
         return False
-    if j > 0 and dirs[2] and not update(i, j, matrix, 2):
-        return False
+    # if j > 0 and dirs[2] and not update(i, j, matrix, 2):
+    #     return False
     if j < row_length - 1 and dirs[3] and not update(i, j, matrix, 3):
         return False
     return True
@@ -165,6 +160,7 @@ def update(i, j, matrix, dir):
     if temp != matrix[ni][nj]:
         return update_matrix(ni, nj, matrix, dirs)
     return True
+
 
 # def get_possibilities_by_neighbors():
 #     possibilities = dict()
@@ -229,10 +225,12 @@ input_2 = [[True, False, True, False, False, True, True, True],
 
 inputs = [input_0, input_1, input_2]
 for g in inputs:
-    for i in xrange(100):
-    # for r in solution(g):
-    #     print r
-        print solution(g)
+        # for r in solution(g):
+        #     print r
+    print solution(g)
+
 # # get_possibilities_by_neighbors()
 # # for k, v in get_possibilities_by_neighbors().items():
 # #     print k, v
+
+
