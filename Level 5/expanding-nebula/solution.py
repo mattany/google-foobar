@@ -109,12 +109,12 @@ def get_possibilities_by_neighbors():
 def solution(g):
     # return construct_solution(g, 0, 0, [[None for _ in xrange(len(g[0]))] for _ in xrange(len(g))])
     mat = get_starting_matrix(g)
-    return construct_solution([(mat, 0, 0)], 0)
+    return construct_solution(mat, 0, 0)
 
 
 def insert(m, v, i, j):
-    m[i][j] = v
-    return m
+    m[i][j] = {v}
+    return copy.deepcopy(m)
 
 
 def convert_matrix(input_matrix):
@@ -135,7 +135,7 @@ def convert_matrix(input_matrix):
 def get_starting_matrix(input_matrix):
     min_length = 16
     starting_row, starting_col = 0, 0
-    output_matrix = [[{_ for _ in xrange(16)} for _ in xrange(len(g[0]))] for _ in xrange(len(g))]
+    output_matrix = [[{_ for _ in xrange(16)} for _ in xrange(len(input_matrix[0]))] for _ in xrange(len(input_matrix))]
     for i in xrange(len(input_matrix)):
         for j in xrange(len(input_matrix[0])):
             u, d, l, r = None, None, None, None
@@ -155,62 +155,34 @@ def get_starting_matrix(input_matrix):
     return output_matrix
 
 
-def construct_solution(stack, sum):
-    while stack:
-        output_matrix, i, j = stack.pop()
-        if i == len(output_matrix) - 1 and j == len(output_matrix[0]) - 1:
-            # todo delete
-            # for opt in options:
-            #     for row in convert_matrix(insert(output_matrix, opt, i, j)):
-            #         print row
-            #     print
-            #     for row in insert(output_matrix, opt, i, j):
-            #         print row
-            #     print
-            sum += len(output_matrix[i][j])
-        else:
-            if len(output_matrix[i][j]) == 1:
-                (j, i) = (j + 1, i) if j + 1 < len(output_matrix) else (0, i + 1)
-                stack.append(output_matrix, i, j)
-            else:
-                for opt in output_matrix[i][j]:
-                    output_matrix[i][j] = {opt}
-                    temp = copy.deepcopy(output_matrix)
-                    if update_matrix(i, j, temp):
-                        (j, i) = (j + 1, i) if j + 1 < len(output_matrix) else (0, i + 1)
-                        stack.append(temp, i, j)
-    return sum
+def construct_solution(output_matrix, i, j):
+    if update_matrix(i, j, output_matrix, (0, 1, 0, 1)):
+        while i < len(output_matrix) and len(output_matrix[i][j]) == 1:
+            (j, i) = (j + 1, i) if j < len(output_matrix[0]) - 1 else (0, i + 1)
+        if i == len(output_matrix):
+            return 1
+        return sum([construct_solution(insert(output_matrix, opt, i, j), i, j) for opt in output_matrix[i][j]])
+    else:
+        return 0
 
 
 def update_matrix(i, j, matrix, dirs):
-    if i > 0 and dirs[0]:
-        if not update(i, j, up_options, matrix, 0):
-            return False
-    if i < len(matrix) - 1 and dirs[1]:
-        if not update(i, j, down_options, matrix, 1):
-            return False
-    if j > 0 and dirs[2]:
-        if not update(i, j, i, j - 1, left_options, matrix):
-            return False
-    if j < len(matrix) - 1 and dirs[3]:
-        if not update(i, j, i, j + 1, right_options, matrix):
-            return False
+    if i > 0 and dirs[0] and not update(i, j, matrix, 0):
+        return False
+    if i < len(matrix) - 1 and dirs[1] and not update(i, j, matrix, 1):
+        return False
+    if j > 0 and dirs[2] and not update(i, j, matrix, 2):
+        return False
+    if j < len(matrix[0]) - 1 and dirs[3] and not update(i, j, matrix, 3):
+        return False
     return True
 
 
-def update(i, j, options, matrix, dir):
-    if dir == 0:
-        dirs = (1, 0, 1, 1)
-        ni, nj = i - 1, j
-    elif dir == 1:
-        dirs = (0, 1, 1, 1)
-        ni, nj = i + 1, j
-    elif dir == 2:
-        dirs = (1, 1, 1, 0)
-        ni, nj = i, j - 1
+def update(i, j, matrix, dir):
+    if dir == 1:
+        dirs, ni, nj, options = (0, 1, 0, 1), i + 1, j, down_options
     elif dir == 3:
-        dirs = (1, 1, 0, 1)
-        ni, nj = i, j + 1
+        dirs, ni, nj, options = (0, 1, 0, 1), i, j + 1, right_options
     else:
         assert False
 
@@ -250,10 +222,10 @@ input_2 = [[True, False, True, False, False, True, True, True],
            [True, False, True, False, False, True, True, True]]
 
 inputs = [input_0, input_1, input_2]
-for g in inputs:
-    # for r in solution(g):
-    #     print r
-    print solution(g)
+# for g in inputs:
+# for r in solution(g):
+#     print r
+print solution(input_0)
 # get_possibilities_by_neighbors()
 # for k, v in get_possibilities_by_neighbors().items():
 #     print k, v
