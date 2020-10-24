@@ -66,50 +66,12 @@ udlr = {(None, 1, 0, None): {0, 5, 6, 9, 10, 12, 13, 14}, (1, None, 1, None): {0
 gas_options = {1, 2, 4, 8}
 
 
-def get_possibilities_by_neighbors():
-    possibilities = dict()
-    for u in range(3):
-        for d in range(3):
-            for l in range(3):
-                for r in range(3):
-                    if u:
-                        u_options = gas_options
-                    else:
-                        u_options = {_ for _ in xrange(16)} - gas_options
-                    if d:
-                        d_options = gas_options
-                    else:
-                        d_options = {_ for _ in xrange(16)} - gas_options
-                    if l:
-                        l_options = gas_options
-                    else:
-                        l_options = {_ for _ in xrange(16)} - gas_options
-                    if r:
-                        r_options = gas_options
-                    else:
-                        r_options = {_ for _ in xrange(16)} - gas_options
-                    u_possibilities, d_possibilities, l_possibilities, r_possibilities = set(), set(), set(), set()
-                    for u_opt in u_options:
-                        u_possibilities |= down_options[u_opt]
-                    for d_opt in d_options:
-                        d_possibilities |= up_options[d_opt]
-                    for l_opt in l_options:
-                        l_possibilities |= right_options[l_opt]
-                    for r_opt in r_options:
-                        r_possibilities |= left_options[r_opt]
-                    if u == 2: u, u_possibilities = None, {_ for _ in xrange(16)}
-                    if d == 2: d, d_possibilities = None, {_ for _ in xrange(16)}
-                    if l == 2: l, l_possibilities = None, {_ for _ in xrange(16)}
-                    if r == 2: r, r_possibilities = None, {_ for _ in xrange(16)}
-                    possibilities[(u, d, l, r)] = u_possibilities & r_possibilities & d_possibilities & l_possibilities \
-                                                  - {1, 2, 4, 8}
-    print possibilities
-
 
 def solution(g):
-    # return construct_solution(g, 0, 0, [[None for _ in xrange(len(g[0]))] for _ in xrange(len(g))])
+    global row_length, mat_length
     mat = get_starting_matrix(g)
-    return construct_solution(mat, 0, 0)
+    row_length, mat_length = len(g[0]), len( g)
+    return construct_solution([(mat, 0, 0)], 0)
 
 
 def insert(m, v, i, j):
@@ -155,15 +117,21 @@ def get_starting_matrix(input_matrix):
     return output_matrix
 
 
-def construct_solution(output_matrix, i, j):
-    if update_matrix(i, j, output_matrix, (0, 1, 0, 1)):
+def construct_solution(stack, sum):
+    while stack:
+        output_matrix, i, j = stack.pop()
         while i < len(output_matrix) and len(output_matrix[i][j]) == 1:
             (j, i) = (j + 1, i) if j < len(output_matrix[0]) - 1 else (0, i + 1)
         if i == len(output_matrix):
-            return 1
-        return sum([construct_solution(insert(output_matrix, opt, i, j), i, j) for opt in output_matrix[i][j]])
-    else:
-        return 0
+            sum += 1
+        else:
+            for opt in output_matrix[i][j]:
+                output_matrix[i][j] = {opt}
+                temp = copy.copy(output_matrix)
+                if update_matrix(i, j, temp, (0, 1, 0, 1)):
+                    (temp_j, temp_i) = (j + 1, i) if j < len(output_matrix[0]) - 1 else (0, i + 1)
+                    stack.append((temp, temp_i, temp_j))
+    return sum
 
 
 def update_matrix(i, j, matrix, dirs):
@@ -173,7 +141,7 @@ def update_matrix(i, j, matrix, dirs):
         return False
     if j > 0 and dirs[2] and not update(i, j, matrix, 2):
         return False
-    if j < len(matrix[0]) - 1 and dirs[3] and not update(i, j, matrix, 3):
+    if j < row_length - 1 and dirs[3] and not update(i, j, matrix, 3):
         return False
     return True
 
@@ -191,13 +159,51 @@ def update(i, j, matrix, dir):
         directional_options |= options[opt]
     # if change happened
     temp = matrix[ni][nj]
-    matrix[ni] = [matrix[ni][_] if _ != nj else matrix[ni][nj] & directional_options for _ in xrange(len(matrix[ni]))]
+    matrix[ni] = [matrix[ni][_] if _ != nj else matrix[ni][nj] & directional_options for _ in xrange(row_length)]
     if not matrix[ni][nj]:
         return False
     if temp != matrix[ni][nj]:
         return update_matrix(ni, nj, matrix, dirs)
     return True
 
+# def get_possibilities_by_neighbors():
+#     possibilities = dict()
+#     for u in range(3):
+#         for d in range(3):
+#             for l in range(3):
+#                 for r in range(3):
+#                     if u:
+#                         u_options = gas_options
+#                     else:
+#                         u_options = {_ for _ in xrange(16)} - gas_options
+#                     if d:
+#                         d_options = gas_options
+#                     else:
+#                         d_options = {_ for _ in xrange(16)} - gas_options
+#                     if l:
+#                         l_options = gas_options
+#                     else:
+#                         l_options = {_ for _ in xrange(16)} - gas_options
+#                     if r:
+#                         r_options = gas_options
+#                     else:
+#                         r_options = {_ for _ in xrange(16)} - gas_options
+#                     u_possibilities, d_possibilities, l_possibilities, r_possibilities = set(), set(), set(), set()
+#                     for u_opt in u_options:
+#                         u_possibilities |= down_options[u_opt]
+#                     for d_opt in d_options:
+#                         d_possibilities |= up_options[d_opt]
+#                     for l_opt in l_options:
+#                         l_possibilities |= right_options[l_opt]
+#                     for r_opt in r_options:
+#                         r_possibilities |= left_options[r_opt]
+#                     if u == 2: u, u_possibilities = None, {_ for _ in xrange(16)}
+#                     if d == 2: d, d_possibilities = None, {_ for _ in xrange(16)}
+#                     if l == 2: l, l_possibilities = None, {_ for _ in xrange(16)}
+#                     if r == 2: r, r_possibilities = None, {_ for _ in xrange(16)}
+#                     possibilities[(u, d, l, r)] = u_possibilities & r_possibilities & d_possibilities & l_possibilities \
+#                                                   - {1, 2, 4, 8}
+#     print possibilities
 
 # def construct_solution(all_options):
 #     output_matrix = [[None for _ in xrange(len(g[0]))] for _ in xrange(len(g))]
@@ -223,9 +229,10 @@ input_2 = [[True, False, True, False, False, True, True, True],
 
 inputs = [input_0, input_1, input_2]
 for g in inputs:
+    for i in xrange(100):
     # for r in solution(g):
     #     print r
-    print solution(g)
-# get_possibilities_by_neighbors()
-# for k, v in get_possibilities_by_neighbors().items():
-#     print k, v
+        print solution(g)
+# # get_possibilities_by_neighbors()
+# # for k, v in get_possibilities_by_neighbors().items():
+# #     print k, v
