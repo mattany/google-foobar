@@ -114,7 +114,7 @@ def solution(g):
 
 def insert(m, v, i, j):
     m[i][j] = {v}
-    return copy.deepcopy(m)
+    return copy.copy(m)
 
 
 def convert_matrix(input_matrix):
@@ -191,7 +191,7 @@ def update(i, j, matrix, dir):
         directional_options |= options[opt]
     # if change happened
     temp = matrix[ni][nj]
-    matrix[ni][nj] = matrix[ni][nj] & directional_options
+    matrix[ni] = [matrix[ni][_] if _ != nj else matrix[ni][nj] & directional_options for _ in xrange(len(matrix[ni]))]
     if not matrix[ni][nj]:
         return False
     if temp != matrix[ni][nj]:
@@ -222,10 +222,10 @@ input_2 = [[True, False, True, False, False, True, True, True],
            [True, False, True, False, False, True, True, True]]
 
 inputs = [input_0, input_1, input_2]
-# for g in inputs:
-# for r in solution(g):
-#     print r
-print solution(input_0)
+for g in inputs:
+    # for r in solution(g):
+    #     print r
+    print solution(g)
 # get_possibilities_by_neighbors()
 # for k, v in get_possibilities_by_neighbors().items():
 #     print k, v
