@@ -10,6 +10,28 @@ down_options = [{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15},
                 {0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15},
                 {0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}
                 ]
+
+uid = 0
+
+down_right_options = [{0, 1, 2, 3, 4, 5, 6, 7}, {8, 9, 10, 11, 12, 13, 14, 15}, {0, 1, 2, 3, 4, 5, 6, 7},
+                      {8, 9, 10, 11, 12, 13, 14, 15},
+                      {0, 1, 2, 3, 4, 5, 6, 7}, {8, 9, 10, 11, 12, 13, 14, 15}, {0, 1, 2, 3, 4, 5, 6, 7},
+                      {8, 9, 10, 11, 12, 13, 14, 15},
+                      {0, 1, 2, 3, 4, 5, 6, 7}, {8, 9, 10, 11, 12, 13, 14, 15}, {0, 1, 2, 3, 4, 5, 6, 7},
+                      {8, 9, 10, 11, 12, 13, 14, 15},
+                      {0, 1, 2, 3, 4, 5, 6, 7}, {8, 9, 10, 11, 12, 13, 14, 15}, {0, 1, 2, 3, 4, 5, 6, 7},
+                      {8, 9, 10, 11, 12, 13, 14, 15},
+                      ]
+
+up_right_options = [{0, 1, 4, 5, 8, 9, 12, 13}, {0, 1, 4, 5, 8, 9, 12, 13}, {0, 1, 4, 5, 8, 9, 12, 13},
+                    {0, 1, 4, 5, 8, 9, 12, 13},
+                    {2, 3, 6, 7, 10, 11, 14, 15}, {2, 3, 6, 7, 10, 11, 14, 15}, {2, 3, 6, 7, 10, 11, 14, 15},
+                    {2, 3, 6, 7, 10, 11, 14, 15},
+                    {0, 1, 4, 5, 8, 9, 12, 13}, {0, 1, 4, 5, 8, 9, 12, 13}, {0, 1, 4, 5, 8, 9, 12, 13},
+                    {0, 1, 4, 5, 8, 9, 12, 13},
+                    {2, 3, 6, 7, 10, 11, 14, 15}, {2, 3, 6, 7, 10, 11, 14, 15}, {2, 3, 6, 7, 10, 11, 14, 15},
+                    {2, 3, 6, 7, 10, 11, 14, 15},
+                    ]
 up_options = [{0, 4, 8, 12}, {0, 4, 8, 12}, {0, 4, 8, 12}, {0, 4, 8, 12},
               {1, 5, 9, 13}, {1, 5, 9, 13}, {1, 5, 9, 13}, {1, 5, 9, 13},
               {2, 6, 10, 14}, {2, 6, 10, 14}, {2, 6, 10, 14}, {2, 6, 10, 14},
@@ -72,25 +94,17 @@ def solution(g):
     mat = get_starting_matrix(g)
     return construct_solution([(mat, 0, 0)], 0)
 
+
 def get_starting_matrix(input_matrix):
-    output_matrix = [[{_ for _ in xrange(16)} for _ in xrange(row_length)] for _ in xrange(mat_length)]
+    output_matrix = [[{_: [] for _ in xrange(16)} for _ in xrange(row_length)] for _ in xrange(mat_length)]
     for i in xrange(mat_length):
         for j in xrange(row_length):
-            u, d, l, r = None, None, None, None
-            if i > 0:
-                u = input_matrix[i - 1][j]
-            if j > 0:
-                l = input_matrix[i][j - 1]
             if not input_matrix[i][j]:
-                if i < mat_length - 1:
-                    d = input_matrix[i + 1][j]
-                if j < row_length - 1:
-                    r = input_matrix[i][j + 1]
-                options = udlr[(u, d, l, r)]
-                output_matrix[i][j] = options
+                output_matrix[i][j] -= gas_options
             else:
-                output_matrix[i][j] = gas_options
+                output_matrix[i][j] = {_: [] for _ in gas_options}
     return output_matrix
+
 
 def insert(m, v, i, j):
     m[i][j] = {v}
@@ -123,28 +137,33 @@ def construct_solution(stack, sum):
             for opt in output_matrix[i][j]:
                 output_matrix[i][j] = {opt}
                 temp = copy.copy(output_matrix)
-                if update_matrix(i, j, temp, (0, 1, 0, 1)):
+                if update_matrix(i, j, temp):
                     (temp_j, temp_i) = (j + 1, i) if j < len(output_matrix[0]) - 1 else (0, i + 1)
                     stack.append((temp, temp_i, temp_j))
     return sum
 
 
-def update_matrix(i, j, matrix, dirs):
+def update_matrix(i, j, matrix):
+    dirs = ()
+    if j < row_length - 1:
+        update(i, j, matrix, 1)
+        return False
+
     # if i > 0 and dirs[0] and not update(i, j, matrix, 0):
     #     return False
-    if i < len(matrix) - 1 and dirs[1] and not update(i, j, matrix, 1):
-        return False
+    # if i < len(matrix) - 1 and dirs[1] and not update(i, j, matrix, 1):
+    #     return False
     # if j > 0 and dirs[2] and not update(i, j, matrix, 2):
     #     return False
-    if j < row_length - 1 and dirs[3] and not update(i, j, matrix, 3):
-        return False
+    # if j < row_length - 1 and dirs[3] and not update(i, j, matrix, 3):
+    #     return False
     return True
 
 
-def update(i, j, matrix, dir):
-    if dir == 1:
+def update(i, j, matrix, direction):
+    if direction == 1:
         dirs, ni, nj, options = (0, 1, 0, 1), i + 1, j, down_options
-    elif dir == 3:
+    elif direction == 3:
         dirs, ni, nj, options = (0, 1, 0, 1), i, j + 1, right_options
     else:
         assert False
@@ -162,8 +181,19 @@ def update(i, j, matrix, dir):
     return True
 
 
-# def get_possibilities_by_neighbors():
-#     possibilities = dict()
+def get_possibilities_by_neighbors(ur, r, dr, d, self):
+    possibilities = dict()
+    d_options = gas_options if d else {_ for _ in xrange(16)} - gas_options
+    if l:
+        l_options = gas_options
+    else:
+        l_options = {_ for _ in xrange(16)} - gas_options
+    if r:
+        r_options = gas_options
+    else:
+        r_options = {_ for _ in xrange(16)} - gas_options
+
+
 #     for u in range(3):
 #         for d in range(3):
 #             for l in range(3):
@@ -209,6 +239,15 @@ def update(i, j, matrix, dir):
 #                 output_matrix[i][j] = k
 #
 
+def get_next_state(matrix):
+    output = [[False for _ in xrange(len(matrix[0]) - 1)] for _ in xrange(len(matrix) - 1)]
+    for i in xrange(len(matrix) - 1):
+        for j in xrange(len(matrix[0]) - 1):
+            neighbors = [matrix[i][j], matrix[i][j + 1], matrix[i + 1][j], matrix[i + 1][j + 1]]
+            if sum(neighbors) == 1:
+                output[i][j] = True
+    return output
+
 
 input_0 = [[True, True, False, True, False, True, False, True, True, False],
            [True, True, False, False, False, False, True, True, True, False],
@@ -222,15 +261,18 @@ input_2 = [[True, False, True, False, False, True, True, True],
            [True, True, True, False, False, False, True, False],
            [True, False, True, False, False, False, True, False],
            [True, False, True, False, False, True, True, True]]
+import random
 
-inputs = [input_0, input_1, input_2]
+ROWS = 7
+COLUMNS = 11
+input_3 = get_next_state([[random.randint(0, 1) for _ in xrange(COLUMNS)] for _ in xrange(ROWS)])
+inputs = [input_0, input_1, input_3]
 for g in inputs:
-        # for r in solution(g):
-        #     print r
+    for r in g:
+        print r
+    print
     print solution(g)
 
 # # get_possibilities_by_neighbors()
 # # for k, v in get_possibilities_by_neighbors().items():
 # #     print k, v
-
-
