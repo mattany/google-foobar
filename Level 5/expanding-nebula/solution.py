@@ -1,3 +1,7 @@
+import numpy as np
+
+
+
 right_options = [{0, 1, 4, 5}, {2, 3, 6, 7}, {0, 1, 4, 5}, {2, 3, 6, 7},
                  {8, 9, 12, 13}, {10, 11, 14, 15}, {8, 9, 12, 13}, {10, 11, 14, 15},
                  {0, 1, 4, 5}, {2, 3, 6, 7}, {0, 1, 4, 5}, {2, 3, 6, 7},
@@ -66,53 +70,58 @@ def construct_solution(g):
         current_row = reduce(lambda x, y: x + y, temp)
     prev_row = current_row
     visited_states, visited_rows = dict(), dict()
+    t ,m= 0, 0
     for i in xrange(1, mat_length):
         current_row = list()
-        # case j = 0
         for k, prev_opt in enumerate(prev_row):
-            if g[i][0]:
-                cur_opt = gas_options & down_options[prev_opt[0]] & down_left_options[prev_opt[1]]
+            cur = (tuple(prev_opt), tuple(g[i]))
+            if cur in visited_rows:
+                current_row.append(visited_rows[cur])
+                t += 1
+
+                # print prev_opt, visited_rows[cur]
             else:
-                cur_opt = empty_options & down_options[prev_opt[0]] & down_left_options[prev_opt[1]]
-            current_row.append([[_] for _ in cur_opt])
-        # case 0 < j < row_length - 1
-        for j in xrange(1, row_length - 1):
-            for k, prev_opt in enumerate(prev_row):
+                # case j = 0
+                if g[i][0]:
+                    cur_opt = gas_options & down_options[prev_opt[0]] & down_left_options[prev_opt[1]]
+                else:
+                    cur_opt = empty_options & down_options[prev_opt[0]] & down_left_options[prev_opt[1]]
+                current_row.append([[_] for _ in cur_opt])
+                # case 0 < j < row_length - 1
+                for j in xrange(1, row_length - 1):
+                    temp = list()
+                    for opt in current_row[k]:
+                        state = (prev_opt[j - 1], prev_opt[j], prev_opt[j + 1], opt[-1], g[i][j])
+
+                        if state in visited_states:
+                            m += 1
+
+                            if visited_states[state]:
+                                temp += [opt + [_] for _ in visited_states[state]]
+                        else:
+                            cur_possibilities = gas_options if g[i][j] else empty_options
+                            cur_possibilities = cur_possibilities & \
+                                                down_right_options[prev_opt[j - 1]] & \
+                                                down_options[prev_opt[j]] & \
+                                                down_left_options[prev_opt[j + 1]] & \
+                                                right_options[opt[-1]]
+                            if cur_possibilities:
+                                temp += [opt + [_] for _ in cur_possibilities]
+                            visited_states[state] = cur_possibilities
+                    current_row[k] = temp
+                # case j = row_length
                 temp = list()
                 for opt in current_row[k]:
-                    state = (prev_opt[j - 1], prev_opt[j], prev_opt[j + 1], opt[-1], g[i][j])
-
-                    if state in visited_states:
-                        if visited_states[state]:
-                            temp += [opt + [_] for _ in visited_states[state]]
-                    else:
-                        cur_possibilities = gas_options if g[i][j] else empty_options
-                        cur_possibilities = cur_possibilities & \
-                                            down_right_options[prev_opt[j - 1]] & \
-                                            down_options[prev_opt[j]] & \
-                                            down_left_options[prev_opt[j + 1]] & \
-                                            right_options[opt[-1]]
-                        if cur_possibilities:
-                            temp += [opt + [_] for _ in cur_possibilities]
-                        visited_states[state] = cur_possibilities
+                    cur_possibilities = gas_options if g[i][row_length - 1] else empty_options
+                    cur_possibilities = cur_possibilities & \
+                                        down_right_options[prev_opt[row_length - 2]] & \
+                                        down_options[prev_opt[row_length - 1]] & \
+                                        right_options[opt[-1]]
+                    if cur_possibilities:
+                        temp += [opt + [_] for _ in cur_possibilities]
                 current_row[k] = temp
-    # case j = row_length
-        for k, prev_opt in enumerate(prev_row):
-            temp = list()
-            for opt in current_row[k]:
-                cur_possibilities = gas_options if g[i][row_length - 1] else empty_options
-                cur_possibilities = cur_possibilities & \
-                                    down_right_options[prev_opt[row_length - 2]] & \
-                                    down_options[prev_opt[row_length - 1]] & \
-                                    right_options[opt[-1]]
-                if cur_possibilities:
-                    temp += [opt + [_] for _ in cur_possibilities]
-            current_row[k] = temp
+                visited_rows[cur] = temp
         prev_row = reduce(lambda x, y: x + y, current_row)
-        print(prev_row)
-        print
-        print
-        print
     return len(prev_row)
 
 
@@ -151,7 +160,7 @@ ROWS = 7
 COLUMNS = 11
 # input_3 = get_next_state([[random.randint(0, 1) for _ in xrange(COLUMNS)] for _ in xrange(ROWS)])
 inputs = [input_0, input_1, input_2]
-# inputs = [input_2]
+# inputs = [input_0]
 for g in inputs:
     # for i in xrange(100):
         # for r in g:
